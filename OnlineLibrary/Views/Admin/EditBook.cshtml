@@ -1,0 +1,168 @@
+﻿@{
+    Layout = null;
+}
+@model OnlineLibrary.Models.Book
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f8c291, #6a89cc);
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #232526, #414345, #2C3E50, #0f2027);
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #6a89cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #4a69bd;
+            }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error-message, .success-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Book</h1>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="error-message">@TempData["Error"]</div>
+        }
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="success-message">@TempData["Message"]</div>
+        }
+
+        <form id="editBookForm" asp-action="EditBook" asp-controller="Admin" method="post">
+            <input type="hidden" asp-for="BookID" />
+
+            <label asp-for="Title">Title</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+
+            <label asp-for="Author">Author</label>
+            <input asp-for="Author" class="form-control" />
+            <span asp-validation-for="Author" class="text-danger"></span>
+
+            <label asp-for="Publisher">Publisher</label>
+            <input asp-for="Publisher" class="form-control" />
+            <span asp-validation-for="Publisher" class="text-danger"></span>
+
+            <label asp-for="Price">Price</label>
+            <input asp-for="Price" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+
+            <label asp-for="BorrowPrice">Borrow Price</label>
+            <input asp-for="BorrowPrice" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="BorrowPrice" class="text-danger"></span>
+
+            <label asp-for="Discount">Discount (%)</label>
+            <input asp-for="Discount" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="Discount" class="text-danger"></span>
+
+            <label asp-for="Genre">Genre</label>
+            <input asp-for="Genre" class="form-control" />
+            <span asp-validation-for="Genre" class="text-danger"></span>
+
+            <label asp-for="BookUrl">BookUrl</label>
+            <input asp-for="BookUrl" class="form-control" />
+            <span asp-validation-for="BookUrl" class="text-danger"></span>
+
+            <label asp-for="ImageUrl">Image URL</label>
+            <input asp-for="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+
+            <label asp-for="CopiesAvailable">Copies Available</label>
+            <input asp-for="CopiesAvailable" type="number" class="form-control" />
+            <span asp-validation-for="CopiesAvailable" class="text-danger"></span>
+
+            <label asp-for="CopiesAvailableRent">Copies Available Rent</label>
+            <input asp-for="CopiesAvailableRent" type="number" class="form-control" />
+            <span asp-validation-for="CopiesAvailableRent" class="text-danger"></span>
+
+            <label asp-for="AgeRestriction">Age Restriction</label>
+            <input asp-for="AgeRestriction" class="form-control" />
+            <span asp-validation-for="AgeRestriction" class="text-danger"></span>
+
+            <label asp-for="PublicationYear">Publication Year</label>
+            <input asp-for="PublicationYear" type="number" class="form-control" />
+            <span asp-validation-for="PublicationYear" class="text-danger"></span>
+
+            <button type="submit" class="btn btn-primary" id="saveChangesButton">Save Changes</button>
+        </form>
+
+        <a href="/Admin/ManageBooks" class="back-link">Back to Manage Books</a>
+    </div>
+
+    <script>
+        // Add event listener to the Save Changes button
+        document.getElementById('saveChangesButton').addEventListener('click', function (event) {
+            alert('The book has been updated successfully!');
+        });
+    </script>
+</body>
+</html>

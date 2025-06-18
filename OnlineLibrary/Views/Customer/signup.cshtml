@@ -1,0 +1,177 @@
+﻿@model OnlineLibrary.Models.CustomerModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signup-container {
+            width: 900px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            input[type="password"]:focus {
+                border-color: #74ebd5;
+            }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #74ebd5;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+
+            input[type="submit"]:hover {
+                background: #66d0c5;
+            }
+
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+            .login-link a {
+                color: #74ebd5;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .login-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+
+        <form action="/Customer/Submit" method="post">
+            <!-- First Row -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="ID">ID</label>
+                    <input id="ID" name="ID" type="text" required pattern="\d{9}" maxlength="9" placeholder="9 digit ID">
+                </div>
+                <div class="form-group">
+                    <label for="firstname">First Name</label>
+                    <input id="firstname" name="firstname" type="text" required placeholder="Enter first name">
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name</label>
+                    <input id="lastname" name="lastname" type="text" required placeholder="Enter last name">
+                </div>
+                
+            </div>
+
+            <!-- Second Row -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" required placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" required placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input id="address" name="address" type="text" required placeholder="Enter address">
+                </div>
+               
+            </div>
+
+
+            <p style="text-align:center; color:#888; font-size:14px;">
+                💡 You can leave the card details empty and add them later. When you want to pay you can add your.
+            </p>
+
+            <!-- Third Row -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="cardnum">Card Number</label>
+                    <input id="cardnum" name="CreditCardNumber" type="text" maxlength="16" pattern="\d{16}"  placeholder="1234567812345678">
+                </div>
+                <div class="form-group">
+                    <label for="expdate">Expiration Date</label>
+                    <input id="expdate" name="CreditCardValidDate" type="text" pattern="(0[1-9]|1[0-2])\/\d{2}" placeholder="MM/YY">
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input id="cvv" name="CreditCardCVC" type="text" maxlength="4" pattern="\d{3}" placeholder="123">
+                </div>
+            </div>
+
+            <input type="submit" value="Sign Up">
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/Customer/Login">Login</a>
+        </div>
+    </div>
+
+</body>
+</html>

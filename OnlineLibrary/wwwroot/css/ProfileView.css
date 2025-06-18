@@ -1,0 +1,202 @@
+﻿/* General styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container */
+.container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Heading */
+h1 {
+    font-size: 2.5rem;
+    color: #ffd700;
+    text-align: center;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+}
+
+/* Section headings */
+h2 {
+    font-size: 1.8rem;
+    color: #ffd700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ffd700;
+    padding-bottom: 5px;
+}
+
+/* Details section */
+.profile-details {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+    .profile-details p {
+        font-size: 1.2rem;
+        margin: 5px 0;
+        color: #ddd;
+    }
+
+/* Books sections */
+.books-section {
+    margin-top: 20px;
+    text-align: left;
+}
+
+    .books-section p {
+        font-size: 1.2rem;
+        color: #ccc;
+    }
+
+        /* Empty message */
+        .books-section p:not(:first-child) {
+            text-align: center;
+            margin-top: 10px;
+            color: #ff6f61;
+        }
+
+/* Navbar */
+nav {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+    nav a {
+        color: #ffd700;
+        font-size: 1rem;
+        margin: 0 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s, text-shadow 0.3s;
+    }
+
+        nav a:hover {
+            color: #fff;
+            text-shadow: 0 4px 8px rgba(255, 255, 255, 0.6);
+        }
+
+/* Buttons */
+button {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+    button:hover {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    }
+
+/* Remove button */
+.remove-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .remove-button:hover {
+        transform: scale(1.1);
+        background-color: #c0392b;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    }
+
+/* Rating form */
+.rating-form {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+    .rating-form label {
+        font-size: 1rem;
+        color: #ffd700;
+    }
+
+    .rating-form select,
+    .rating-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ffd700;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .rating-form button {
+        background: linear-gradient(135deg, #28a745, #218838);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+        .rating-form button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #218838, #28a745);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .profile-details p {
+        font-size: 1rem;
+    }
+
+    nav a {
+        font-size: 0.9rem;
+    }
+}

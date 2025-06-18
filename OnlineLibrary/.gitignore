@@ -1,0 +1,11 @@
+﻿.vs/
+.idea/
+*.vsidx
+*.suo
+bin/
+obj/
+*.exe
+*.dll
+*.log
+*.tmp
+*.env

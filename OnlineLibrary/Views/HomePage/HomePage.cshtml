@@ -1,0 +1,897 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<OnlineLibrary.Models.Book>
+
+@{
+    bool isUserLoggedIn = ViewBag.IsUserLoggedIn != null && (bool)ViewBag.IsUserLoggedIn;
+    string userType = ViewBag.UserType ?? ""; // "Admin" or "Customer" or empty
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/HomePage.css" asp-append-version="true">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap + Select2 CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    @* Existing TempData message check (modal) *@
+    @if (TempData["Message"] != null)
+    {
+        <div id="errorMessageModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeErrorModal()">&times;</span>
+                <p>@TempData["Message"]</p>
+            </div>
+        </div>
+    }
+
+    @* NEW: If there's an ErrorMessage (e.g., "You cannot borrow more than 3 books..."), show an alert *@
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            alert("@TempData["ErrorMessage"]");
+        </script>
+    }
+
+    <!-- FILTER FORM -->
+    <div class="filter-section-container">
+        <form method="get" action="/HomePage" class="row animated-filter-form">
+
+            <!-- Title Filter -->
+            <div class="col-md-2 mb-2">
+                <label for="title">Title:</label>
+                <select class="form-control" name="title" id="title">
+                    <option value="">Select Title</option>
+                    @if (ViewBag.Titles != null)
+                    {
+                        foreach (var t in (List<string>)ViewBag.Titles)
+                        {
+                            <option value="@t">@t</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <!-- Genre Filter -->
+            <div class="col-md-2 mb-2">
+                <label for="genre">Genre:</label>
+                <select class="form-control" name="genre" id="genre">
+                    <option value="">Select Genre</option>
+                    @if (ViewBag.Genres != null)
+                    {
+                        foreach (var g in (List<string>)ViewBag.Genres)
+                        {
+                            <option value="@g">@g</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <!-- Price Sort (Price Range) -->
+            <div class="col-md-2 mb-2">
+                <label for="priceRange">Price Sort:</label>
+                <select class="form-control" name="priceRange" id="priceRange">
+                    <option value="">Select Sort</option>
+                    <option value="low-to-high">Low to High</option>
+                    <option value="high-to-low">High to Low</option>
+                </select>
+            </div>
+
+            <!-- Method (buy/borrow) -->
+            <div class="col-md-2 mb-2">
+                <label for="method">Method:</label>
+                <select class="form-control" name="method" id="method">
+                    <option value="">Select Method</option>
+                    <option value="buy">Buy</option>
+                    <option value="borrow">Borrow</option>
+                </select>
+            </div>
+
+            <!-- Age Limit Filter -->
+            <div class="col-md-2 mb-2">
+                <label for="ageLimit">Age Limit:</label>
+                <select class="form-control" name="ageLimit" id="ageLimit">
+                    <option value="">Select Age</option>
+                    @if (ViewBag.AgeRestrictions != null)
+                    {
+                        foreach (var age in (List<string>)ViewBag.AgeRestrictions)
+                        {
+                            <option value="@age">@age</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <!-- On Sale Filter -->
+            <div class="col-md-2 mb-2">
+                <label for="onSale">On Sale:</label>
+                <select class="form-control" name="onSale" id="onSale">
+                    <option value="">Select</option>
+                    <option value="On Sale">On Sale</option>
+                    <option value="Not on Sale">Not on Sale</option>
+                </select>
+            </div>
+
+            <!-- Optional Search Box -->
+            <div class="col-md-3 mb-2">
+                <label for="searchQuery">Search:</label>
+                <input class="form-control" type="text" name="searchQuery" id="searchQuery"
+                       placeholder="Title, Author, Publisher" />
+            </div>
+
+            <!-- Filter Button -->
+            <div class="col-md-2 mb-2" style="margin-top: 31px;">
+                <button type="submit" class="btn btn-primary" id="filterButton">Search</button>
+            </div>
+        </form>
+
+    </div>
+    <!-- END FILTER FORM -->
+    <!-- BOOK GALLERY -->
+    <div class="book-gallery">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var book in Model)
+            {
+                <div class="book-card" style="background-image: url('@book.ImageUrl'); background-size: cover; background-position: center;">
+                    <div class="text-overlay">
+
+                        <div class="book-details">
+                            <h3 class="book-title">@book.Title</h3>
+                            <div class="additional-book-info">
+                                <p class="book-author">Author: @book.Author</p>
+                                <p class="book-publisher">Publisher: @book.Publisher</p>
+
+                                <!-- Price Section -->
+                                <p class="book-price">
+                                    @if (book.Discount.HasValue && book.Discount > 0)
+                                    {
+                                        <span class="original-price">
+                                            Price: <del>$@book.Price.ToString("F2")</del>
+                                        </span>
+                                        <br />
+                                        <span class="discounted-price">
+                                            Sale Price:
+                                            $@((book.Price - (book.Price * (book.Discount.Value / 100))).ToString("F2"))
+                                        </span>
+                                        <span class="on-sale-badge">On Sale!</span>
+                                    }
+                                    else
+                                    {
+                                        @($"${book.Price:F2}")
+                                    }
+                                </p>
+
+                                <p class="book-borrow-price">Borrow Price: $@book.BorrowPrice</p>
+
+                                <div class="age-restriction">
+                                    <span>Age Restriction: </span>
+                                    <span style="color: red;">@book.AgeRestriction</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Book Actions -->
+                        <div class="book-actions">
+                            @if (userType != "Admin")
+                            {
+                                <!-- Show Buy/Borrow/Add-to-cart if not Admin -->
+                                @if (book.CopiesAvailable > 0 && book.CopiesAvailableRent > 0)
+                                {
+                                    <button type="button" onclick="openEditModal('Buy','@book.BookID')">Buy</button>
+                                    <button type="button" onclick="openEditModal('Borrow','@book.BookID')">Borrow</button>
+                                    <button type="button"
+                                            class="add-to-basket"
+                                            data-product-id="@book.BookID"
+                                            data-product-name="@book.Title"
+                                            data-product-price="@book.Price"
+                                            onclick="addToCart('@book.BookID', '@book.Title')">
+                                        Add to Cart
+                                    </button>
+                                }
+                                else if (book.CopiesAvailable > 0 && book.CopiesAvailableRent <= 0)
+                                {
+                                    <button type="button" onclick="openEditModal('Buy','@book.BookID')">Buy</button>
+                                    <form id="waitingListForm" method="post" action="@Url.Action("EnterWaitingList", "HomePage")">
+                                        <input type="hidden" name="bookID" value="@book.BookID" />
+                                        <input type="hidden" name="bookAuthor" value="@book.Author" />
+                                        <input type="hidden" name="Title" value="@book.Title" />
+                                        <button type="button" onclick="handleEnterWaitingList('@book.BookID', '@book.Title')" class="out-of-stock"> WaitingList</button>
+                                    </form>
+                                }
+                                else if (book.CopiesAvailable <= 0 && book.CopiesAvailableRent > 0)
+                                {
+                                    <button type="button" onclick="openEditModal('Borrow','@book.BookID')">Borrow</button>
+                                }
+                                else
+                                {
+                                    <form method="post" onclick="openEditModal('Borrow','@book.BookID')" action="@Url.Action("EnterWaitingList", "HomePage")">
+                                        <input type="hidden" name="bookID" value="@book.BookID" />
+                                        <input type="hidden" name="bookAuthor" value="@book.Author" />
+                                        <input type="hidden" name="Title" value="@book.Title" />
+                                        <button type="submit" class="out-of-stock">WaitingList</button>
+                                    </form>
+                                }
+                            }
+
+                            <!-- Everyone (Admin or Customer) can see "View Ratings" -->
+                            <button type="button" class="view-ratings-button" onclick="openRatingsModal('@book.BookID')">
+                                View Ratings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="basket-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <h2>Your Cart</h2>
+            <div id="basket-contents" class="basket-contents">
+                <!-- Cart items will be dynamically loaded here -->
+            </div>
+            <p id="total-price" class="total-price">Total Price: $0.00</p>
+            <button onclick="proceedToCheckout()" id="pay-button" class="pay-button">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Ratings Modal -->
+    <div id="ratingsModal" class="comment-modal">
+        <div class="comment-modal-content">
+            <span class="comment-close-btn" onclick="closeRatingsModal()">&times;</span>
+            <h2 class="comment-modal-title">Ratings &amp; Comments</h2>
+            <div id="ratingsContent" class="comment-ratings-content">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Payment Modal (For single Buy/Borrow) -->
+    <div id="paymentCheckoutModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePaymentModal()">&times;</span>
+            <h3>Payment Details</h3>
+            <form id="paymentCheckoutForm">
+                <div>
+                    <label for="cardNumber">Card Number:</label>
+                    <input type="text" id="checkoutCardNumber" name="cardNumber" maxlength="16" pattern="\d{16}" required placeholder="1234567812345678" />
+                </div>
+                <div>
+                    <label for="exDate">Expire Date:</label>
+                    <input type="text" id="checkoutExDate" name="exDate" pattern="(0[1-9]|1[0-2])\/\d{2}" required placeholder="MM/YY" />
+                </div>
+                <div>
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="checkoutCVV" name="cvv" maxlength="4" pattern="\d{3,4}" required placeholder="123" />
+                </div>
+                <button type="button" onclick="submitCheckout()">Submit Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal (For single Buy/Borrow) -->
+    <div id="PaymentModal" class="payment-modal" style="display: none;">
+        <div class="payment-modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3>Payment</h3>
+            <!--
+                 1) We add onsubmit="return showSuccessAlert();" so that upon clicking "Pay",
+                    we pop an alert showing the success message immediately before submission.
+            -->
+            <form id="paymentForm" method="post" action="/Payment/ProcessPayment" onsubmit="return showSuccessAlert();">
+                <input type="hidden" id="actionType" name="actionType" />
+                <input type="hidden" id="BookID" name="BookID" />
+                <input type="hidden" id="days" name="days" />
+                <!-- Payment fields ... -->
+                <div class="Label1">
+                    <label for="cardNumber">Card Number:</label>
+                    <input type="text" id="cardNumber" name="cardNumber" maxlength="16" pattern="\d{16}" required
+                           placeholder="1234567812345678" />
+                </div>
+
+                <div class="Label1">
+                    <label for="ExDate">Expire Date:</label>
+                    <input type="text" id="ExDate" name="ExDate" pattern="(0[1-9]|1[0-2])\/\d{2}" required
+                           placeholder="MM/YY" />
+                </div>
+                <div class="Label1">
+                    <label for="CVV">CVV:</label>
+                    <input type="text" id="CVV" name="CVV" maxlength="4" pattern="\d{3,4}"
+                           required placeholder="123" />
+                </div>
+
+                <button type="submit" style="background-color: green; color: #fff; padding: 8px;">
+                    Pay
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addToCartModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAddToCartModal()">&times;</span>
+            <h2>Select Action</h2>
+            <p id="selectedBookTitle"></p>
+            <form id="addToCartForm">
+                <label for="actionType">Action:</label>
+                <select id="actionTypeSelect" required>
+                    <option value="">Select Action</option>
+                    <option value="Buy">Buy</option>
+                    <option value="Borrow">Borrow</option>
+                </select>
+                <div id="quantityOrDaysInput" style="display: none; margin-top: 10px;">
+                    <label for="quantityOrDays">Enter Quantity/Days:</label>
+                    <input type="number" id="quantityOrDays" min="1" required />
+                </div>
+                <button type="button" onclick="submitAddToCart()">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <footer style="background-color: #212529; color: #fff; padding: 50px 20px; margin-top: 50px; width: 100%; box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);">
+        <div style="max-width: 1200px; margin: auto; text-align: center;">
+            <h4 style="margin-bottom: 20px; font-size: 28px; font-weight: bold; color: #ffc107;">Rate Our Website</h4>
+            <p style="font-size: 16px; margin-bottom: 30px; color: #ccc;">
+                We value your feedback! Share your thoughts and help us improve.
+            </p>
+            <form id="siteRatingForm" onsubmit="submitSiteRating(event)" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                    <div>
+                        <label for="siteRatingStars" style="font-size: 18px; font-weight: bold; color: #ffc107;">Stars (1-5):</label><br>
+                        <select id="siteRatingStars" required style="padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #6c757d; background-color: #343a40; color: #fff;">
+                            <option value="5">★★★★★ (5)</option>
+                            <option value="4">★★★★ (4)</option>
+                            <option value="3">★★★ (3)</option>
+                            <option value="2">★★ (2)</option>
+                            <option value="1">★ (1)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; max-width: 600px;">
+                        <label for="siteRatingComment" style="font-size: 18px; font-weight: bold; color: #ffc107;">Comment:</label><br>
+                        <textarea id="siteRatingComment" rows="4" placeholder="Write your feedback here..."
+                                  style="width: 100%; padding: 15px; font-size: 16px; border-radius: 5px; border: 1px solid #6c757d; background-color: #343a40; color: #fff; resize: none;"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #ffc107; border: none; color: #212529; font-weight: bold; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                    Submit Rating
+                </button>
+            </form>
+
+            <!-- Display existing site ratings -->
+            <div id="allSiteRatings" style="margin-top: 40px; text-align: left; padding: 20px; background-color: #343a40; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); max-height: 300px; overflow: auto">
+                <h5 style="margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #ffc107; text-align: center;">What Others Are Saying</h5>
+                <div id="ratingsList" style="max-height: 300px; overflow-y: auto; color: #ccc; padding-right: 10px; scrollbar-width: thin; scrollbar-color: #ffc107 #343a40;">
+                    <!-- JavaScript will populate comments here -->
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery, Bootstrap, Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <script>
+        // Show error message modal if there's a TempData message
+        document.addEventListener("DOMContentLoaded", () => {
+            loadAllSiteRatings();
+            const errorMessageModal = document.getElementById("errorMessageModal");
+            if (errorMessageModal) {
+                errorMessageModal.style.display = "flex";
+            }
+        });
+
+        function closeErrorModal() {
+            const errorMessageModal = document.getElementById("errorMessageModal");
+            if (errorMessageModal) {
+                errorMessageModal.style.display = "none";
+            }
+        }
+
+        // We'll inject the "isUserLoggedIn" as a JS variable. If it's false, we go to /Customer/Login.
+        var isUserLoggedIn = @(isUserLoggedIn ? "true" : "false");
+
+        // Payment Modal Logic
+        function openEditModal(actionType, BookID) {
+            console.log("actionType, BookID", actionType, BookID)
+            if (!isUserLoggedIn) {
+                // Not logged in => redirect to /Customer/Login
+                window.location.href = "/Customer/Login";
+                return;
+            }
+
+            if (actionType === "Borrow") {
+                const days = 30;
+
+                // Add days to the form and open the Payment modal
+                document.getElementById("actionType").value = actionType;
+                document.getElementById("BookID").value = BookID;
+                document.getElementById("days").value = parseInt(days);
+                document.getElementById("PaymentModal").style.display = "flex";
+                return;
+            }
+
+            // For Buy action
+            document.getElementById("actionType").value = actionType;
+            document.getElementById("BookID").value = BookID;
+            document.getElementById("PaymentModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("PaymentModal").style.display = "none";
+        }
+
+        // Basket logic
+        var basket = [];
+
+        function sendValueToServer() {
+            if (basket.length > 0) {
+                const totalPrice = basket.reduce((sum, item) => sum + item.totalPrice, 0);
+                localStorage.setItem("basket", JSON.stringify(basket));
+                window.location.href = `/Payment/Payments?totalAmount=${totalPrice.toFixed(2)}`;
+            } else {
+                alert("Basket is empty!");
+            }
+        }
+
+        // Open the cart modal
+        function openCartModal() {
+            const basketModal = document.getElementById("basket-modal");
+            if (basketModal) {
+                basketModal.style.display = "block";
+                updateCartContents();
+            } else {
+                console.error("Basket modal element not found.");
+            }
+        }
+
+        // Close the cart modal
+        function closeCartModal() {
+            const basketModal = document.getElementById("basket-modal");
+            if (basketModal) {
+                basketModal.style.display = "none";
+            }
+        }
+
+        // Add to cart functionality
+        function addToCart(bookID, title) {
+            console.log("bookID:", bookID, "title:", title); // Debugging line
+            const modal = document.getElementById("addToCartModal");
+            modal.dataset.bookId = bookID;
+            modal.dataset.title = title;
+
+            document.getElementById("selectedBookTitle").innerText = `Book: ${title}`;
+            modal.style.display = "block";
+        }
+
+        function closeAddToCartModal() {
+            document.getElementById("addToCartModal").style.display = "none";
+        }
+
+        // Show quantity or days input based on selected action
+        document.getElementById("actionTypeSelect").addEventListener("change", function () {
+            const actionType = this.value;
+            const inputField = document.getElementById("quantityOrDaysInput");
+            inputField.style.display = actionType === "Buy" || actionType === "Borrow" ? "block" : "none";
+        });
+
+        // Submit the action
+        function submitAddToCart() {
+            const modal = document.getElementById("addToCartModal");
+            const bookID = modal.dataset.bookId;
+            const title = modal.dataset.title;
+            const actionType = document.getElementById("actionTypeSelect").value;
+            const quantityOrDays = parseInt(document.getElementById("quantityOrDays").value);
+
+            // Validation
+            if (!actionType) {
+                alert("Please select an action.");
+                return;
+            }
+            if (!quantityOrDays || quantityOrDays <= 0) {
+                alert("Please enter a valid quantity or number of days.");
+                return;
+            }
+
+            // Close the modal
+            closeAddToCartModal();
+
+            // Send cart item to the server
+            fetch("/Cart/AddToCart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    BookID: bookID,
+                    Title: title,
+                    ActionType: actionType,
+                    Days: actionType === "Borrow" ? quantityOrDays : null,
+                    Copies: actionType === "Buy" ? quantityOrDays : null,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Item added to cart!");
+                        updateCartContents();
+                    } else {
+                        alert("Failed to add item to cart: " + data.message);
+                    }
+                })
+                .catch((err) => console.error("Error while adding to cart:", err));
+        }
+
+        // Update cart contents
+        function updateCartContents() {
+            console.log("Fetching cart contents...");
+
+            fetch("/Cart/ViewCart")
+                .then(async (response) => {
+                    if (!response.ok) {
+                        console.error("Failed to fetch cart contents. Status:", response.status);
+                        throw new Error("Failed to fetch cart contents.");
+                    }
+                    console.log(response);
+                    const data = await response.json();
+
+                    const basketContents = document.getElementById("basket-contents");
+                    const totalPriceElement = document.getElementById("total-price");
+                    console.log("data", data);
+
+                    basketContents.innerHTML = ""; // Clear current contents
+                    let totalPrice = 0;
+
+                    if (data.length === 0) {
+                        basketContents.innerHTML = "<p>Your cart is empty.</p>";
+                    } else {
+                        data.forEach((item) => {
+                            // 1) Find the matching Book from your global 'allBooksData'
+                            const matchedBook = (window.allBooksData || []).find(b => b.BookID === item.bookID);
+                            if (!matchedBook) {
+                                console.warn("No matching book found for ID:", item.bookID);
+                                return;
+                            }
+
+                            // 2) Figure out base price (Buy => book.Price, Borrow => book.BorrowPrice)
+                            const isBuy = (item.actionType === "Buy");
+                            const basePrice = isBuy ? matchedBook.Price : matchedBook.BorrowPrice;
+
+                            // 3) Determine how many copies/days
+                            const quantity = isBuy ? item.copies : 1;
+
+                            // 4) Original total for this cart line
+                            let originalPrice = quantity * basePrice;
+
+                            // 5) Apply discount if present
+                            const discount = matchedBook.Discount || 0;
+                            let finalPrice = originalPrice;
+                            let discountHTML = "";
+                            if (discount > 0) {
+                                const discountAmt = originalPrice * (discount / 100);
+                                finalPrice = originalPrice - discountAmt;
+                                discountHTML = `
+                                            <p>Original: <del>$${originalPrice.toFixed(2)}</del></p>
+                                            <p>Discount: ${discount}% off</p>
+                                            <p><strong>Final: $${finalPrice.toFixed(2)}</strong></p>
+                                        `;
+                            } else {
+                                discountHTML = `<p><strong>Price: $${finalPrice.toFixed(2)}</strong></p>`;
+                            }
+
+                            // 6) Add to overall total
+                            totalPrice += finalPrice;
+
+                            // 7) Construct the cart item HTML
+                            basketContents.innerHTML += `
+                                        <div class="cart-item" style="margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                            <p><strong>${item.title}</strong></p>
+                                            <p>Type: ${item.actionType}</p>
+                                            <p>${isBuy ? "Copies: " + item.copies : "Days: " + item.days}</p>
+                                            ${discountHTML}
+                                            <button class="remove-item" onclick="removeFromCart('${item.cartID}')">Remove</button>
+                                        </div>
+                                    `;
+                        });
+                    }
+
+                    // 8) Update the total price
+                    totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+                    console.log("Cart contents updated successfully.");
+                })
+                .catch((err) => console.error("Error updating cart contents:", err));
+        }
+
+        // Remove item from cart
+        function removeFromCart(cartID) {
+            console.log("cartID", cartID)
+            fetch("/Cart/RemoveFromCart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cartId: cartID }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Item removed from cart!");
+                        updateCartContents();
+                    } else {
+                        alert("Failed to remove item: " + data.message);
+                    }
+                })
+                .catch((err) => console.error(err));
+        }
+
+        // Proceed to checkout (opens Payment Modal #paymentCheckoutModal)
+        function proceedToCheckout() {
+            openPaymentModal();
+        }
+
+        // Open the cart checkout payment modal
+        function openPaymentModal() {
+            console.log("here")
+            const paymentModal = document.getElementById("paymentCheckoutModal");
+            paymentModal.style.display = "block";
+        }
+
+        // Close the cart checkout payment modal
+        function closePaymentModal() {
+            const paymentModal = document.getElementById("paymentCheckoutModal");
+            paymentModal.style.display = "none";
+        }
+
+        // Proceed to checkout after payment details are submitted (Cart flow)
+        function submitCheckout() {
+            // Validate payment details
+            const cardNumber = document.getElementById("checkoutCardNumber").value;
+            const exDate = document.getElementById("checkoutExDate").value;
+            const cvv = document.getElementById("checkoutCVV").value;
+
+            if (!cardNumber || !exDate || !cvv) {
+                alert("Please fill out all payment fields.");
+                return;
+            }
+
+            // Close the payment modal
+            closePaymentModal();
+
+            // Proceed with checkout via fetch
+            fetch("/Payment/CheckoutCart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    cardNumber: cardNumber,
+                    exDate: exDate,
+                    cvv: cvv,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // >>> ADDITION 2: Show success message for "borrow/buy"
+                        alert("Your buy or borrow has been successful!");
+                        alert(data.message);
+
+                        basket = []; // Clear the basket
+                        updateCartContents();
+                        closeCartModal();
+                    } else {
+                        alert("Checkout failed: " + data.message);
+                    }
+                })
+                .catch((err) => console.error("Error during checkout:", err));
+        }
+
+        // This function displays the "View Ratings" modal and fetches data for a given book
+        function openRatingsModal(bookID) {
+            const modal = document.getElementById('ratingsModal');
+            const ratingsContent = document.getElementById('ratingsContent');
+
+            ratingsContent.innerHTML = "Loading...";
+            modal.style.display = "block";
+
+            fetch(`/Ratings/GetRatingsForBook?bookID=${bookID}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        ratingsContent.innerHTML = "<p>No ratings for this book yet.</p>";
+                    } else {
+                        let html = "";
+                        data.forEach(rating => {
+                            const filledStars = "★".repeat(rating.ratingStars);
+                            const emptyStars = "☆".repeat(5 - rating.ratingStars);
+
+                            html += `
+                                        <div style="margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                            <p><strong>User:</strong> ${rating.username}</p>
+                                            <p><strong>Rating:</strong> ${filledStars}${emptyStars} (${rating.ratingStars} / 5)</p>
+                                            <p><strong>Comment:</strong> ${rating.comment}</p>
+                                            <p><small><em>Posted on ${rating.createdAt}</em></small></p>
+                                        </div>`;
+                        });
+                        ratingsContent.innerHTML = html;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching ratings:", error);
+                    ratingsContent.innerHTML = "<p>Failed to load ratings. Please try again later.</p>";
+                });
+        }
+
+        // Closes the "View Ratings" modal
+        function closeRatingsModal() {
+            const modal = document.getElementById('ratingsModal');
+            modal.style.display = "none";
+        }
+
+        // Submit site rating via POST
+        function submitSiteRating(e) {
+            e.preventDefault();
+
+            var stars = document.getElementById("siteRatingStars").value;
+            var comment = document.getElementById("siteRatingComment").value;
+
+            fetch("/SiteRatings/AddRating", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ RatingStars: parseInt(stars), Comment: comment })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Thank you! Your rating has been submitted.");
+                        document.getElementById("siteRatingForm").reset();
+                        loadAllSiteRatings(); // Refresh the list of ratings
+                    } else {
+                        alert("Error submitting rating: " + data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error posting site rating:", err);
+                });
+        }
+
+        // Load all site ratings (GET)
+        function loadAllSiteRatings() {
+            fetch("/SiteRatings/GetAllRatings")
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById("allSiteRatings");
+                    container.innerHTML = "";
+                    if (!data || data.length === 0) {
+                        container.innerHTML = "<p>No ratings yet.</p>";
+                        return;
+                    }
+
+                    // Rebuild the rating list
+                    const heading = document.createElement("h5");
+                    heading.style.marginBottom = "20px";
+                    heading.style.fontSize = "24px";
+                    heading.style.fontWeight = "bold";
+                    heading.style.color = "#ffc107";
+                    heading.style.textAlign = "center";
+                    heading.textContent = "What Others Are Saying";
+                    container.appendChild(heading);
+
+                    const list = document.createElement("div");
+                    list.id = "ratingsList";
+                    list.style.maxHeight = "300px";
+                    list.style.overflowY = "auto";
+                    list.style.color = "#ccc";
+                    list.style.paddingRight = "10px";
+                    list.style.scrollbarWidth = "thin";
+                    list.style.scrollbarColor = "#ffc107 #343a40";
+
+                    data.forEach(rating => {
+                        const filledStars = "★".repeat(rating.ratingStars);
+                        const emptyStars = "☆".repeat(5 - rating.ratingStars);
+
+                        const div = document.createElement("div");
+                        div.style.borderBottom = "1px solid #ccc";
+                        div.style.marginBottom = "10px";
+                        div.style.paddingBottom = "5px";
+                        div.innerHTML = `
+                                    <p><strong>User:</strong> ${rating.username}</p>
+                                    <p><strong>Rating:</strong> ${filledStars}${emptyStars} (${rating.ratingStars}/5)</p>
+                                    <p><strong>Comment:</strong> ${rating.comment || ""}</p>
+                                    <p><small><em>Posted on ${rating.createdAt}</em></small></p>
+                                `;
+                        list.appendChild(div);
+                    });
+
+                    container.appendChild(list);
+                })
+                .catch(err => console.error("Error loading site ratings:", err));
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isUserLoggedIn) {
+                updateCartContents();
+            }
+
+            const viewBasketLink = document.getElementById("view-cart");
+            if (viewBasketLink) {
+                viewBasketLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    openCartModal();
+                });
+            }
+        });
+
+        // >>> ADDITION 1: Show a success alert immediately before the PaymentModal form submits.
+        function showSuccessAlert() {
+            alert("Payment successful!");
+            return true; // Let the form submit
+        }
+
+        // Expose these functions to the global scope
+        window.addToCart = addToCart;
+        window.openCartModal = openCartModal;
+        window.closeCartModal = closeCartModal;
+        window.updateCartContents = updateCartContents;
+        window.removeFromCart = removeFromCart;
+        window.proceedToCheckout = proceedToCheckout;
+        window.submitAddToCart = submitAddToCart;
+        window.loadAllSiteRatings = loadAllSiteRatings;
+        window.allBooksData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+        function handleEnterWaitingList(bookID, bookTitle) {
+            console.log("Entering waiting list for BookID:", bookID, "Title:", bookTitle);
+
+            // Show the payment modal (for Borrow action)
+            const actionType = "Borrow";
+            openEditModal(actionType, bookID);
+
+            // Set up payment form callback to submit waiting list form
+            const paymentForm = document.getElementById("paymentForm");
+            paymentForm.onsubmit = function (event) {
+                event.preventDefault(); // Prevent default form submission of the payment form
+
+                // Validate payment form inputs
+                const cardNumber = document.getElementById("cardNumber").value;
+                const exDate = document.getElementById("ExDate").value;
+                const cvv = document.getElementById("CVV").value;
+
+                if (!cardNumber || !exDate || !cvv) {
+                    alert("Please fill out all payment details.");
+                    return false;
+                }
+
+                // Simulate successful payment processing
+                alert("Payment successful!");
+
+                // NOW show the alert that user has been added to waiting list
+                alert("You has been added to the waiting list for " + bookTitle + "!");
+
+                // Submit the waiting list form
+                document.getElementById("waitingListForm").submit();
+
+                // Close the payment modal
+                closeModal();
+
+                return true; // Allow further processing if needed
+            };
+        }
+    </script>
+
+</body>
+</html>

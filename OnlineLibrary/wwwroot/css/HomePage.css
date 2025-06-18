@@ -1,0 +1,1107 @@
+﻿
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Sleek, modern font */
+    background: linear-gradient(135deg, #232526, #414345, #2C3E50, #0f2027); /* Dark-themed gradient */
+    /* Dynamic multi-color gradient */
+    background-size: 400% 400%; /* Adds movement effect to the gradient */
+    animation: gradientBG 10s ease infinite; /* Smooth gradient animation */
+    color: #222; /* Neutral dark color for contrast */
+    line-height: 1.8; /* Improved text readability */
+    padding: 20px;
+    margin: 0;
+    overflow-x: hidden; /* Prevents horizontal scroll issues */
+    text-rendering: optimizeLegibility;
+}
+
+/* Gradient animation for dynamic background */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Adding a decorative overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/brick-wall.png'); /* Subtle texture pattern */
+    opacity: 0.05; /* Ensures texture does not overpower the gradient */
+    z-index: -1;
+}
+
+/* Adding glow effects for interactive elements */
+a, button {
+    color: #fff;
+    background-color: #6a11cb;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.75);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    a:hover, button:hover {
+        transform: scale(1.1); /* Slight enlargement */
+        box-shadow: 0 8px 30px rgba(106, 17, 203, 1); /* Stronger glow */
+    }
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    padding: 20px;
+    color: #fcc16e;
+    margin-bottom: 20px;
+}
+
+    header h1 {
+        margin: 0;
+        font-size: 36px;
+    }
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+    .nav-links a {
+        color: #ffd277;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: color 0.3s ease;
+    }
+
+        .nav-links a:hover {
+            color: #66afe9;
+        }
+
+/* Compact Search Bar Styles */
+. /* Compact Search Bar Styles */
+.search-form-inline {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Push search to the right */
+}
+
+.search-bar-inline {
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    padding: 0 5px;
+    color: #ffd277; /* Match the navigation links' color */
+}
+
+.search-input-inline {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #ffd277; /* Match the navigation links' color */
+    background-color: transparent;
+    width: 120px; /* Compact width */
+    text-align: right;
+    transition: border-bottom 0.3s ease-in-out;
+    border-bottom: 1px solid #ffd277; /* Add underline for consistency */
+}
+
+    .search-input-inline:focus {
+        border-bottom: 1px solid #66afe9; /* Focus effect */
+    }
+
+    .search-input-inline::placeholder {
+        font-size: 12px;
+        color: #ffd277; /* Match the navigation links' color */
+    }
+
+.search-button-inline {
+    background: none;
+    border: none;
+    color: #ffd277; /* Match the navigation links' color */
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.3s ease-in-out;
+}
+
+    .search-button-inline:hover {
+        color: #66afe9; /* Hover effect for the button */
+    }
+
+/* Book Gallery Styles */
+.book-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Individual Book Card Styles */
+.book-card {
+    position: relative;
+    width: 300px;
+    height: 450px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.additional-book-info {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #ddd;
+}
+
+.book-card:hover .book-details {
+    opacity: 1;
+    transform: translateX(0);
+    right: 0;
+}
+
+
+
+.book-cover {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 2px solid #e6d5b8;
+}
+
+/* Text Overlay for Book Info (Hidden by Default, Slides from Right) */
+.book-details {
+    position: absolute;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+/* Book Information */
+.book-info {
+    padding: 15px;
+}
+
+.book-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+    .book-title:hover {
+        color: #f39c12;
+    }
+
+
+
+
+.book-author,
+.book-publisher {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.book-price {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.discounted-price {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+/* Add to Basket Button */
+.add-to-basket {
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+}
+
+    .add-to-basket:hover {
+        background-color: #ff8c00;
+        transform: scale(1.05);
+    }
+
+    .add-to-basket:active {
+        transform: scale(0.95);
+    }
+/* Book Buttons - Always Visible at the Bottom */
+.book-actions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: space-evenly; /* Spread evenly */
+    flex-wrap: wrap;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+    .book-actions button {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        width: 110px;
+        height: 45px;
+        font-size: 0.75rem;
+        line-height: 1.1;
+        white-space: normal;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+
+        .book-actions button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4), 0 0 8px rgba(37, 117, 252, 0.6);
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+        }
+        /* Grid layout for 3 buttons: 2 on top, 1 centered under */
+.book-actions.button-group-3 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+    gap: 10px;
+    justify-items: center;
+}
+
+.book-actions.button-group-3 button:nth-child(3) {
+    grid-column: 1 / span 2;
+    justify-self: center;
+}
+
+.book-actions {
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+        .book-actions button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+
+/* Responsive Styling for Small Screens */
+@media (max-width: 768px) {
+    .book-card {
+        width: 250px;
+        height: 380px;
+    }
+
+    .book-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .search-input {
+        width: 100px; /* Adjust for smaller screens */
+    }
+
+    .book-title {
+        font-size: 1.4rem;
+    }
+
+    .book-actions button {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .book-actions {
+        gap: 3px;
+    }
+}
+
+/* Optional Ribbon for Featured Books */
+.featured {
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    background: linear-gradient(to right, #e74c3c, #c0392b);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 5px 15px;
+    transform: rotate(-45deg);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+/* Button Styles */
+.Btn {
+    width: 140px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to right, #77530a, #ffd277, #77530a, #77530a, #ffd277, #77530a);
+    background-size: 250%;
+    background-position: left;
+    color: #ffd277;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 1s;
+    overflow: hidden;
+}
+
+    .Btn:hover {
+        background-position: right;
+        transition-duration: 1s;
+    }
+
+    .Btn:active {
+        transform: scale(0.95);
+    }
+
+.buy-now, .borrow-button {
+    background-color: #000000;
+    border: none;
+    color: #ffd277;
+    padding: 8px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+    .buy-now:hover, .borrow-button:hover {
+        background-color: #3b3838;
+    }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/* Basket Styles */
+#basket-contents {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.basket-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+    .basket-item:last-child {
+        border-bottom: none;
+    }
+
+.remove-from-basket {
+    background-color: #d01323;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .remove-from-basket:hover {
+        background-color: #d3ad74;
+    }
+
+.total-price {
+    font-weight: bold;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.pay-button {
+    background-color: black;
+    color: #ffd277;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+    .pay-button:hover {
+        background-color: black;
+    }
+
+/* General styling for the select dropdowns */
+select {
+    appearance: none; /* Remove default arrow */
+    background-color: #f8f1e4; /* Matching the card background color */
+    border: 1px solid #d3ad74; /* Border color matching the design */
+    border-radius: 5px; /* Rounded corners */
+    color: #333; /* Text color */
+    font-size: 16px; /* Font size */
+    font-family: "Arial", sans-serif; /* Consistent font */
+    padding: 10px 15px; /* Padding inside the dropdown */
+    width: 100%; /* Full width */
+    max-width: 200px; /* Optional: Limit width */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease; /* Smooth hover and focus effect */
+}
+
+    /* Styling for hover and focus */
+    select:hover,
+    select:focus {
+        background-color: #fff; /* White background on hover */
+        border-color: #b58e57; /* Darker border color */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+        outline: none; /* Remove default focus outline */
+    }
+
+/* Add custom dropdown arrow */
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+/* Filter button styling */
+button {
+    background-color: #007bff; /* Blue color for filter button */
+    color: #fff; /* White text */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside button */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+    /* Hover effect for button */
+    button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+    }
+
+/* General Styling for the Form Container */
+.container form {
+    margin: 20px 0; /* Add some spacing */
+    padding: 10px; /* Padding inside the form */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+    /* Label Styling */
+    .container form label {
+        font-size: 14px; /* Smaller font size */
+        font-weight: bold; /* Bold labels */
+        color: #ffd277; /* Dark text color */
+        display: block; /* Ensure labels are above inputs */
+        margin-bottom: 5px; /* Add spacing below labels */
+    }
+
+    /* Dropdown (Select) Styling */
+    .container form select {
+        appearance: none; /* Remove default dropdown arrow */
+        background-color: #fff; /* White background */
+        border: 1px solid #d3ad74; /* Gold-like border color */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px; /* Padding for content */
+        font-size: 14px; /* Font size for dropdown text */
+        width: 100%; /* Full width of column */
+        color: #333; /* Dark text color */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        transition: all 0.3s ease; /* Smooth transitions */
+    }
+
+        /* Dropdown Hover and Focus Effects */
+        .container form select:hover,
+        .container form select:focus {
+            border-color: #b58e57; /* Darker gold border on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+            outline: none; /* Remove default focus outline */
+        }
+
+    /* Dropdown Custom Arrow */
+    .container form select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+    }
+
+    /* Input Fields for Min and Max Price */
+    .container form input[type="number"] {
+        background-color: #fff; /* White background */
+        border: 1px solid #d3ad74; /* Gold-like border */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px; /* Padding for input fields */
+        font-size: 14px; /* Font size for input text */
+        color: #333; /* Dark text color */
+        width: 100%; /* Full width */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        margin-right: 5px; /* Spacing between Min and Max */
+    }
+
+        /* Input Hover and Focus Effects */
+        .container form input[type="number"]:hover,
+        .container form input[type="number"]:focus {
+            border-color: #b58e57; /* Darker gold border on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+            outline: none; /* Remove default focus outline */
+        }
+
+    /* Button Styling */
+    .container form button {
+        background-color: #007bff; 
+        color: #fff; 
+        border: none; 
+        border-radius: 5px; 
+        padding: 10px 15px; 
+        font-size: 14px; 
+        cursor: pointer;
+        transition: all 0.3s ease; 
+        width: 100%; 
+    }
+
+        /* Button Hover Effects */
+        .container form button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+        }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container form .col-md-2 {
+        margin-bottom: 15px; /* Add spacing between rows */
+    }
+}
+
+.on-sale-badge {
+    display: inline-block;
+    background-color: #ff6347;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 3px 7px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #e74c3c;
+    margin-right: 5px;
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-button {
+    background-color: #007bff;
+    /* Primary Blue */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+    .modal-button:hover {
+        background-color: #0056b3;
+        /* Darker Blue */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+    }
+
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}
+
+    .close-btn:hover {
+        color: red;
+    }
+
+.payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    font-family: "Arial", sans-serif;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}
+
+    .close-btn:hover {
+        color: red;
+    }
+
+.Buttons {
+    margin-top: 20px;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+    .Buttons button {
+        background-color: rgb(49, 177, 49);
+        color: #fff;
+        margin: 5px;
+        display: block;
+        padding: 8px;
+        width: 100%;
+        border-radius: 3px;
+        border: none;
+        transition: transform 0.3s;
+    }
+
+        .Buttons button:hover {
+            transform: scale(1.1);
+        }
+
+    .Buttons form button {
+        background-color: rgb(216, 211, 211);
+        margin: 5px;
+        display: block;
+        width: 100%;
+        padding: 8px;
+        border-radius: 3px;
+        border: none;
+    }
+
+        .Buttons form button:hover {
+            transform: scale(1.1);
+        }
+
+input {
+    padding: 4px;
+    margin: 5px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-button {
+    background-color: #007bff;
+    /* Primary Blue */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+    .modal-button:hover {
+        background-color: #0056b3;
+        /* Darker Blue */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+    }
+
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}
+
+    .close-btn:hover {
+        color: red;
+    }
+
+
+/* Modal backdrop */
+.comment-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 9999; /* Ensure it stays on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scrolling if content is taller than the screen */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+}
+
+/* Modal content */
+.comment-modal-content {
+    background-color: #fff;
+    margin: 5% auto; /* Center the modal */
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 60%;
+    max-width: 600px; /* Maximum width */
+    border-radius: 8px;
+    position: relative; /* For positioning child elements */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Close button */
+.comment-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #888;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+    .comment-close-btn:hover {
+        color: #333;
+    }
+
+/* Modal title */
+.comment-modal-title {
+    margin-top: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    font-size: 1.5em;
+    color: #444;
+}
+
+/* Scrollable ratings content */
+.comment-ratings-content {
+    max-height: 300px; /* Adjust as needed */
+    overflow-y: auto; /* Make it scrollable */
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    padding-right: 10px; /* Add padding for scrollbar spacing */
+}
+/* Search Container */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #2C3E50, #232526); /* Matches homepage dark theme */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 800px; /* Adjust for responsiveness */
+    color: #fff;
+}
+
+    /* Search Input Field */
+    .search-container input[type="text"] {
+        flex: 1;
+        padding: 12px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px 0 0 8px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.1); /* Transparent look */
+        color: #fff;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        /* Input Placeholder */
+        .search-container input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        /* Input Hover and Focus Effects */
+        .search-container input[type="text"]:focus {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+    /* Search Button */
+    .search-container button {
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient to match design */
+        border: none;
+        border-radius: 0 8px 8px 0;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    }
+
+        /* Button Hover Effect */
+        .search-container button:hover {
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .search-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+        .search-container input[type="text"] {
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 10px;
+        }
+
+        .search-container button {
+            border-radius: 0 0 8px 8px;
+            width: 100%;
+        }
+}
+
+/* Optional scrollbar styling */
+.comment-ratings-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.comment-ratings-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.comment-ratings-content::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+    .comment-ratings-content::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+/* New Filter Section Styling */
+.filter-section-container {
+    background: linear-gradient(135deg, #2C3E50, #232526);
+    padding: 30px;
+    margin: 30px auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    max-width: 1000px;
+    width: 90%;
+    color: #fff;
+    transition: all 0.4s ease;
+    animation: fadeInUp 1s ease-out;
+}
+
+.animated-filter-form .form-control,
+.animated-filter-form input,
+.animated-filter-form select {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+    .animated-filter-form select:hover,
+    .animated-filter-form input:hover,
+    .animated-filter-form select:focus,
+    .animated-filter-form input:focus {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: #ffd277;
+        box-shadow: 0 0 10px rgba(255, 221, 77, 0.3);
+        outline: none;
+    }
+
+.animated-filter-form label {
+    font-weight: bold;
+    color: #ffd277;
+    margin-bottom: 5px;
+}
+
+.animated-filter-form .btn-primary {
+    background-color: #ffc107;
+    color: #222;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+    .animated-filter-form .btn-primary:hover {
+        background-color: #ffdb58;
+        box-shadow: 0 6px 15px rgba(255, 193, 7, 0.5);
+    }
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

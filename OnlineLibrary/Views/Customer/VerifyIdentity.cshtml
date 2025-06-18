@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #232526, #414345, #2C3E50, #0f2027);
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-wrapper {
+        max-width: 400px;
+        margin: 100px auto;
+        background-color: #2f3640;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        color: white;
+        text-align: center;
+    }
+
+    .form-wrapper h2 {
+        margin-bottom: 20px;
+        color: #fbc531;
+    }
+
+    .btn-number {
+        margin: 10px;
+        padding: 10px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: #fbc531;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-number:hover {
+        background-color: #e1a600;
+    }
+</style>
+
+<div class="form-wrapper">
+    <h2>Verify Your Identity</h2>
+    <p>Please click the number that was sent to your email.</p>
+
+    <form method="post" asp-controller="Customer" asp-action="ConfirmNumber">
+        <button type="submit" name="picked" value="@ViewBag.Number1" class="btn-number">@ViewBag.Number1</button>
+        <button type="submit" name="picked" value="@ViewBag.Number2" class="btn-number">@ViewBag.Number2</button>
+    </form>
+</div>

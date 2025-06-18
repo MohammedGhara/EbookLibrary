@@ -1,0 +1,151 @@
+﻿@using OnlineLibrary.Models
+@using Newtonsoft.Json
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - OnlineLibrary</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/OnlineLibrary.styles.css" asp-append-version="true"/>
+</head>
+<body>
+<header>
+    <h1>Library</h1>
+    <div class="nav-links">
+        @{
+            string userType = null;
+            string sessionUserJson = Context.Session.GetString("User");
+            if (!string.IsNullOrEmpty(sessionUserJson))
+            {
+                var loggedInUser = JsonConvert.DeserializeObject<CustomerModel>(sessionUserJson);
+                if (loggedInUser != null)
+                {
+                    userType = loggedInUser.Type; // Set the user type based on the session.
+                }
+            }
+        }
+
+        @if (!string.IsNullOrEmpty(userType))
+        {
+            if (userType == "Customer")
+            {
+                <a href="/HomePage">Home</a>
+                <a href="/HomePage/Profile" class="active">Profile</a>
+                <a href="#" id="view-basket" onclick="openCartModal()">View Cart</a>
+                <a href="/Customer/Logout">Log-Out</a>
+            }
+            else if (userType == "Admin")
+            {
+                <a href="/Admin/Admin1">Home</a>
+                <a href="/Customer/Logout">Log-Out</a>
+            }
+        }
+        else
+        {
+                <a href="/Customer/Login">Login</a>
+                 <a href="/HomePage">Home</a>
+        }
+
+    </div>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<style>
+    header {
+        text-align: center;
+        padding: 20px;
+        color: #fcc16e;
+        margin-bottom: 20px;
+    }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+        .nav-links a {
+            color: #ffd277;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+        }
+
+            .nav-links a:hover {
+                color: #66afe9;
+            }
+
+    /* Compact Search Bar Styles */
+    . /* Compact Search Bar Styles */
+    .search-form-inline {
+        display: flex;
+        align-items: center;
+        margin-left: auto; /* Push search to the right */
+    }
+
+    .search-bar-inline {
+        display: flex;
+        align-items: center;
+        border: none;
+        background-color: transparent;
+        padding: 0 5px;
+        color: #ffd277; /* Match the navigation links' color */
+    }
+
+    .search-input-inline {
+        border: none;
+        outline: none;
+        font-size: 14px;
+        color: #ffd277; /* Match the navigation links' color */
+        background-color: transparent;
+        width: 120px; /* Compact width */
+        text-align: right;
+        transition: border-bottom 0.3s ease-in-out;
+        border-bottom: 1px solid #ffd277; /* Add underline for consistency */
+    }
+
+        .search-input-inline:focus {
+            border-bottom: 1px solid #66afe9; /* Focus effect */
+        }
+
+        .search-input-inline::placeholder {
+            font-size: 12px;
+            color: #ffd277; /* Match the navigation links' color */
+        }
+
+    .search-button-inline {
+        background: none;
+        border: none;
+        color: #ffd277; /* Match the navigation links' color */
+        font-size: 14px;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: color 0.3s ease-in-out;
+    }
+
+        .search-button-inline:hover {
+            color: #66afe9; /* Hover effect for the button */
+        }
+</style>
