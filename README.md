@@ -54,7 +54,7 @@ Replace `YOUR_SERVER_NAME` with your SQL Server instance (e.g. `DESKTOP-ABC123\S
 This project integrates with Calibre to convert uploaded eBooks into different formats (e.g., PDF, EPUB, MOBI). To enable this functionality, follow the steps below:
 
 ✅ Step 1: Download & Install Calibre (64-bit)
-Visit: https://calibre-ebook.com/download/windows
+[Visit: https://calibre-ebook.com/download/windows](https://calibre-ebook.com/download_windows)
 
 Download the 64-bit version for Windows.
 
